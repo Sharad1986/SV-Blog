@@ -1,131 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sharad Finance | Market Dashboard</title>
+<title>Sharad Finance Dashboard</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f9;
-    transition: background 0.3s, color 0.3s;
+body { font-family: Arial; margin:0; background:#f4f6f9; }
+header { background:#141e30; color:white; padding:25px; text-align:center; }
+.container { width:90%; margin:auto; padding:20px 0; }
+.card {
+  background:white;
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:10px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
 }
-
-.dark-mode {
-    background-color: #121212;
-    color: white;
-}
-
-header {
-    background: linear-gradient(to right, #141e30, #243b55);
-    color: white;
-    padding: 30px;
-    text-align: center;
-}
-
-nav {
-    background: #1b1b1b;
-    padding: 10px;
-    text-align: center;
-}
-
-nav a {
-    color: white;
-    margin: 15px;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-button {
-    padding: 6px 12px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.container {
-    width: 85%;
-    margin: auto;
-    padding: 30px 0;
-}
-
-.blog-post {
-    background: white;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.dark-mode .blog-post {
-    background: #1e1e1e;
-}
-
-footer {
-    background: #141e30;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    margin-top: 20px;
-}
-
-.sticky-ticker {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
+footer { background:#141e30; color:white; text-align:center; padding:10px; }
 </style>
 </head>
 
 <body>
 
-<!-- 📊 Sticky Market Ticker -->
-<div class="sticky-ticker">
-<div class="tradingview-widget-container">
-  <div class="tradingview-widget-container__widget"></div>
-  <script type="text/javascript"
-    src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js"
-    async>
-  {
-    "symbols": [
-      {"proName": "TVC:NIFTY", "title": "Nifty 50"},
-      {"proName": "TVC:BANKNIFTY", "title": "Bank Nifty"},
-      {"proName": "TVC:SENSEX", "title": "Sensex"},
-      {"proName": "FOREXCOM:DJI", "title": "Dow Jones"},
-      {"proName": "FOREXCOM:NSXUSD", "title": "Nasdaq"},
-      {"proName": "FOREXCOM:SPXUSD", "title": "S&P 500"},
-      {"proName": "BITSTAMP:BTCUSD", "title": "Bitcoin"},
-      {"proName": "BITSTAMP:ETHUSD", "title": "Ethereum"},
-      {"proName": "TVC:GOLD", "title": "Gold"},
-      {"proName": "TVC:USOIL", "title": "Crude Oil"}
-    ],
-    "showSymbolLogo": true,
-    "isTransparent": false,
-    "displayMode": "adaptive",
-    "colorTheme": "light",
-    "locale": "en"
-  }
-  </script>
-</div>
-</div>
-
 <header>
-    <h1>Sharad Finance</h1>
-    <p>Trading | Investing | Global Markets</p>
-    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+<h1>Sharad Finance</h1>
+<p>Indian & Global Market Dashboard</p>
 </header>
 
-<nav>
-    <a href="#">Home</a>
-    <a href="#">Markets</a>
-    <a href="#">Blogs</a>
-    <a href="#">Contact</a>
-</nav>
+<div class="container">
 
-<!-- 🌍 Market Overview Dashboard -->
-<div style="margin:20px;">
+<!-- 🇮🇳 Indian Markets (Official Links) -->
+<div class="card">
+<h2>Indian Markets</h2>
+
+<p>
+<a href="https://www.nseindia.com/get-quotes/equity?symbol=NIFTY%2050" target="_blank">
+🔹 NIFTY 50 – View Live Data (Official NSE)
+</a>
+</p>
+
+<p>
+<a href="https://www.bseindia.com/sensex/code/16/" target="_blank">
+🔹 SENSEX – View Live Data (Official BSE)
+</a>
+</p>
+
+<p>
+<a href="https://www.nseindia.com/get-quotes/equity?symbol=NIFTY%20BANK" target="_blank">
+🔹 BANK NIFTY – View Live Data
+</a>
+</p>
+
+</div>
+
+<!-- 🌍 Global + Crypto + Commodities -->
+<div class="card">
+
 <div class="tradingview-widget-container">
   <div class="tradingview-widget-container__widget"></div>
   <script type="text/javascript"
@@ -141,19 +71,16 @@ footer {
   "showSymbolLogo": true,
   "tabs": [
     {
-      "title": "Indian Indices",
-      "symbols": [
-        {"s": "TVC:NIFTY", "d": "Nifty 50"},
-        {"s": "TVC:BANKNIFTY", "d": "Bank Nifty"},
-        {"s": "TVC:SENSEX", "d": "Sensex"}
-      ]
-    },
-    {
-      "title": "Global Markets",
+      "title": "US Markets",
       "symbols": [
         {"s": "FOREXCOM:DJI", "d": "Dow Jones"},
         {"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
-        {"s": "FOREXCOM:NSXUSD", "d": "Nasdaq"},
+        {"s": "FOREXCOM:NSXUSD", "d": "Nasdaq"}
+      ]
+    },
+    {
+      "title": "Commodities",
+      "symbols": [
         {"s": "TVC:GOLD", "d": "Gold"},
         {"s": "TVC:USOIL", "d": "Crude Oil"}
       ]
@@ -169,31 +96,14 @@ footer {
 }
   </script>
 </div>
+
 </div>
-
-<div class="container">
-
-    <div class="blog-post">
-        <h2>Understanding the Indian Stock Market</h2>
-        <p>The Indian stock market offers tremendous opportunities for disciplined investors...</p>
-    </div>
-
-    <div class="blog-post">
-        <h2>Importance of Risk Management</h2>
-        <p>Capital protection is the foundation of long-term wealth creation...</p>
-    </div>
 
 </div>
 
 <footer>
-    © 2026 Sharad Vijay | All Rights Reserved
+© 2026 Sharad Vijay | All Rights Reserved
 </footer>
-
-<script>
-function toggleDarkMode() {
-    document.body.classList.toggle("dark-mode");
-}
-</script>
 
 </body>
 </html>
