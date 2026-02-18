@@ -3,17 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sharad's Finance Blog</title>
+<title>Sharad Finance | Market Dashboard</title>
 
 <style>
 body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f4f6f9;
+    transition: background 0.3s, color 0.3s;
+}
+
+.dark-mode {
+    background-color: #121212;
+    color: white;
 }
 
 header {
-    background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+    background: linear-gradient(to right, #141e30, #243b55);
     color: white;
     padding: 30px;
     text-align: center;
@@ -32,6 +38,13 @@ nav a {
     font-weight: bold;
 }
 
+button {
+    padding: 6px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
 .container {
     width: 85%;
     margin: auto;
@@ -46,77 +59,128 @@ nav a {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.blog-post h2 {
-    margin-top: 0;
+.dark-mode .blog-post {
+    background: #1e1e1e;
 }
 
 footer {
-    background: #0f2027;
+    background: #141e30;
     color: white;
     text-align: center;
     padding: 15px;
     margin-top: 20px;
 }
 
-@media(max-width: 768px){
-    .container {
-        width: 95%;
-    }
+.sticky-ticker {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 </style>
 </head>
 
 <body>
 
+<!-- 📊 Sticky Market Ticker -->
+<div class="sticky-ticker">
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  <script type="text/javascript"
+    src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js"
+    async>
+  {
+    "symbols": [
+      {"proName": "NSE:NIFTY50", "title": "Nifty 50"},
+      {"proName": "NSE:BANKNIFTY", "title": "Bank Nifty"},
+      {"proName": "BSE:SENSEX", "title": "Sensex"},
+      {"proName": "FOREXCOM:DJI", "title": "Dow Jones"},
+      {"proName": "FOREXCOM:NSXUSD", "title": "Nasdaq"},
+      {"proName": "FOREXCOM:SPXUSD", "title": "S&P 500"},
+      {"proName": "BITSTAMP:BTCUSD", "title": "Bitcoin"},
+      {"proName": "BITSTAMP:ETHUSD", "title": "Ethereum"},
+      {"proName": "TVC:GOLD", "title": "Gold"},
+      {"proName": "TVC:USOIL", "title": "Crude Oil"}
+    ],
+    "showSymbolLogo": true,
+    "isTransparent": false,
+    "displayMode": "adaptive",
+    "colorTheme": "light",
+    "locale": "en"
+  }
+  </script>
+</div>
+</div>
+
 <header>
-    <h1>Sharad's Finance Blog</h1>
-    <p>Trading | Investing | Wealth Creation</p>
+    <h1>Sharad Finance</h1>
+    <p>Trading | Investing | Global Markets</p>
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
 </header>
 
 <nav>
     <a href="#">Home</a>
+    <a href="#">Markets</a>
     <a href="#">Blogs</a>
-    <a href="#">About</a>
     <a href="#">Contact</a>
 </nav>
 
-<!-- ✅ LIVE MARKET TICKER -->
+<!-- 🌍 Market Overview Dashboard -->
 <div style="margin:20px;">
-  <div class="tradingview-widget-container">
-    <div class="tradingview-widget-container__widget"></div>
-    <script type="text/javascript" 
-      src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" 
-      async>
-      {
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  <script type="text/javascript"
+    src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js"
+    async>
+  {
+  "colorTheme": "light",
+  "dateRange": "1D",
+  "showChart": true,
+  "locale": "en",
+  "width": "100%",
+  "height": "500",
+  "showSymbolLogo": true,
+  "tabs": [
+    {
+      "title": "Indian Indices",
       "symbols": [
-        {"proName": "NSE:NIFTY50", "title": "Nifty 50"},
-        {"proName": "BSE:SENSEX", "title": "Sensex"}
-      ],
-      "showSymbolLogo": true,
-      "isTransparent": false,
-      "displayMode": "adaptive",
-      "colorTheme": "light",
-      "locale": "en"
+        {"s": "NSE:NIFTY50", "d": "Nifty 50"},
+        {"s": "NSE:BANKNIFTY", "d": "Bank Nifty"},
+        {"s": "BSE:SENSEX", "d": "Sensex"}
+      ]
+    },
+    {
+      "title": "Global Markets",
+      "symbols": [
+        {"s": "FOREXCOM:DJI", "d": "Dow Jones"},
+        {"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
+        {"s": "FOREXCOM:NSXUSD", "d": "Nasdaq"},
+        {"s": "TVC:GOLD", "d": "Gold"},
+        {"s": "TVC:USOIL", "d": "Crude Oil"}
+      ]
+    },
+    {
+      "title": "Crypto",
+      "symbols": [
+        {"s": "BITSTAMP:BTCUSD", "d": "Bitcoin"},
+        {"s": "BITSTAMP:ETHUSD", "d": "Ethereum"}
+      ]
     }
-    </script>
-  </div>
+  ]
+}
+  </script>
+</div>
 </div>
 
 <div class="container">
 
     <div class="blog-post">
         <h2>Understanding the Indian Stock Market</h2>
-        <p>The Indian stock market offers tremendous opportunities for wealth creation if approached with discipline and knowledge...</p>
+        <p>The Indian stock market offers tremendous opportunities for disciplined investors...</p>
     </div>
 
     <div class="blog-post">
-        <h2>Why Risk Management is Important in Trading</h2>
-        <p>Most traders fail not because of bad strategy, but because of poor risk management. Protecting capital is your first priority...</p>
-    </div>
-
-    <div class="blog-post">
-        <h2>Long-Term Investing vs Short-Term Trading</h2>
-        <p>Both investing and trading can generate profits. The key is understanding your personality, time availability, and risk tolerance...</p>
+        <h2>Importance of Risk Management</h2>
+        <p>Capital protection is the foundation of long-term wealth creation...</p>
     </div>
 
 </div>
@@ -124,6 +188,12 @@ footer {
 <footer>
     © 2026 Sharad Vijay | All Rights Reserved
 </footer>
+
+<script>
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+}
+</script>
 
 </body>
 </html>
