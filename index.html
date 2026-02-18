@@ -1,109 +1,181 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sharad Finance Dashboard</title>
+<title>SV WEALTH - Personal Market Tracker</title>
 
 <style>
-body { font-family: Arial; margin:0; background:#f4f6f9; }
-header { background:#141e30; color:white; padding:25px; text-align:center; }
-.container { width:90%; margin:auto; padding:20px 0; }
-.card {
-  background:white;
-  padding:20px;
-  margin-bottom:20px;
-  border-radius:10px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
-}
-footer { background:#141e30; color:white; text-align:center; padding:10px; }
+    body {
+        margin: 0;
+        font-family: Georgia, serif;
+        background-color: #0c1c2c;
+        color: #d4af37;
+        text-align: center;
+    }
+    header {
+        padding: 30px 20px;
+    }
+    header img {
+        width: 160px;
+    }
+    h1 {
+        letter-spacing: 10px;
+        font-weight: 400;
+        margin-top: 10px;
+    }
+    .search-container {
+        margin: 30px auto;
+    }
+    input, button {
+        padding: 10px;
+        margin: 5px;
+        font-size: 16px;
+    }
+    input {
+        width: 200px;
+        border: 1px solid #d4af37;
+        background: transparent;
+        color: #d4af37;
+        outline: none;
+    }
+    button {
+        background: #d4af37;
+        color: #0c1c2c;
+        border: none;
+        cursor: pointer;
+    }
+    table {
+        margin: auto;
+        width: 95%;
+        max-width: 700px;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid rgba(212,175,55,0.3);
+    }
+    th {
+        background: rgba(212,175,55,0.15);
+    }
+    .remove-btn {
+        background: none;
+        border: none;
+        color: #ff6666;
+        cursor: pointer;
+        font-size: 18px;
+    }
 </style>
 </head>
-
 <body>
 
 <header>
-<h1>Sharad Finance</h1>
-<p>Indian & Global Market Dashboard</p>
+    <img src="logo.png" alt="SV WEALTH Logo">
+    <h1>SV WEALTH</h1>
 </header>
 
-<div class="container">
-
-<!-- 🇮🇳 Indian Markets (Official Links) -->
-<div class="card">
-<h2>Indian Markets</h2>
-
-<p>
-<a href="https://www.nseindia.com/get-quotes/equity?symbol=NIFTY%2050" target="_blank">
-🔹 NIFTY 50 – View Live Data (Official NSE)
-</a>
-</p>
-
-<p>
-<a href="https://www.bseindia.com/sensex/code/16/" target="_blank">
-🔹 SENSEX – View Live Data (Official BSE)
-</a>
-</p>
-
-<p>
-<a href="https://www.nseindia.com/get-quotes/equity?symbol=NIFTY%20BANK" target="_blank">
-🔹 BANK NIFTY – View Live Data
-</a>
-</p>
-
+<div class="search-container">
+    <input type="text" id="stockInput" placeholder="Enter Symbol (e.g. TCS, NIFTY50)">
+    <button onclick="addSymbol()">Add</button>
 </div>
 
-<!-- 🌍 Global + Crypto + Commodities -->
-<div class="card">
+<table id="watchlist">
+    <thead>
+        <tr>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Buy Price</th>
+            <th>P/L (%)</th>
+            <th>P/L ₹</th>
+            <th>Remove</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
-<div class="tradingview-widget-container">
-  <div class="tradingview-widget-container__widget"></div>
-  <script type="text/javascript"
-    src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js"
-    async>
-  {
-  "colorTheme": "light",
-  "dateRange": "1D",
-  "showChart": true,
-  "locale": "en",
-  "width": "100%",
-  "height": "500",
-  "showSymbolLogo": true,
-  "tabs": [
-    {
-      "title": "US Markets",
-      "symbols": [
-        {"s": "FOREXCOM:DJI", "d": "Dow Jones"},
-        {"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
-        {"s": "FOREXCOM:NSXUSD", "d": "Nasdaq"}
-      ]
-    },
-    {
-      "title": "Commodities",
-      "symbols": [
-        {"s": "TVC:GOLD", "d": "Gold"},
-        {"s": "TVC:USOIL", "d": "Crude Oil"}
-      ]
-    },
-    {
-      "title": "Crypto",
-      "symbols": [
-        {"s": "BITSTAMP:BTCUSD", "d": "Bitcoin"},
-        {"s": "BITSTAMP:ETHUSD", "d": "Ethereum"}
-      ]
-    }
-  ]
+<script>
+const watchlistBody = document.querySelector("#watchlist tbody");
+
+// Load saved data
+let portfolio = JSON.parse(localStorage.getItem("portfolio")) || [];
+
+// Format symbol for Yahoo
+function formatSymbol(input) {
+    const sym = input.trim().toUpperCase();
+    if (sym === "NIFTY50") return "^NSEI";
+    if (sym === "SENSEX") return "^BSESN";
+    if (sym === "BANKNIFTY") return "^NSEBANK";
+    if (sym.endsWith(".NS") || sym.endsWith(".BO") || sym.startsWith("^")) return sym;
+    return sym + ".NS";
 }
-  </script>
-</div>
 
-</div>
+function savePortfolio() {
+    localStorage.setItem("portfolio", JSON.stringify(portfolio));
+}
 
-</div>
+async function fetchPrice(symbol) {
+    try {
+        const yahooUrl = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + encodeURIComponent(symbol);
+        const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(yahooUrl);
+        const res = await fetch(proxyUrl);
+        const data = await res.json();
+        return data.quoteResponse.result[0].regularMarketPrice || 0;
+    } catch {
+        return 0;
+    }
+}
 
-<footer>
-© 2026 Sharad Vijay | All Rights Reserved
-</footer>
+async function updateAll() {
+    watchlistBody.innerHTML = "";
+    for (let item of portfolio) {
+        const price = await fetchPrice(item.symbol);
+        const pl = (price - item.buyPrice) * item.qty;
+        const plPct = ((price - item.buyPrice) / item.buyPrice) * 100;
+
+        watchlistBody.innerHTML += `
+            <tr>
+                <td>${item.symbol}</td>
+                <td>${price.toFixed(2)}</td>
+                <td>${item.qty}</td>
+                <td>${item.buyPrice.toFixed(2)}</td>
+                <td>${plPct.toFixed(2)}</td>
+                <td>${pl.toFixed(2)}</td>
+                <td><button class="remove-btn" onclick="removeSymbol('${item.symbol}')">×</button></td>
+            </tr>
+        `;
+    }
+}
+
+function addSymbol() {
+    const input = document.getElementById("stockInput");
+    const raw = input.value.trim();
+    if (!raw) return;
+
+    const sym = formatSymbol(raw);
+
+    const qty = parseFloat(prompt("Enter Quantity for " + sym + ":"));
+    const bp = parseFloat(prompt("Enter Buy Price for " + sym + ":"));
+
+    if (!isNaN(qty) && !isNaN(bp)) {
+        portfolio.push({ symbol: sym, qty: qty, buyPrice: bp });
+        savePortfolio();
+        updateAll();
+    }
+    input.value = "";
+}
+
+function removeSymbol(symbol) {
+    portfolio = portfolio.filter(item => item.symbol !== symbol);
+    savePortfolio();
+    updateAll();
+}
+
+// Update prices every 60 seconds
+updateAll();
+setInterval(updateAll, 60000);
+</script>
 
 </body>
 </html>
