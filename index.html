@@ -41,7 +41,9 @@ h2 {
 
 input {
     padding:8px;
-    width:250px;
+    width:280px;
+    border:none;
+    border-radius:4px;
 }
 
 button {
@@ -50,6 +52,7 @@ button {
     border:none;
     cursor:pointer;
     font-weight:bold;
+    border-radius:4px;
 }
 
 #chart {
@@ -62,6 +65,7 @@ button {
     bottom:0;
     width:100%;
     border-top:2px solid gold;
+    z-index:999;
 }
 </style>
 </head>
@@ -69,27 +73,30 @@ button {
 <body>
 
 <header>
-<img src="logo.png">
+<img src="logo.png" alt="SV Wealth Logo">
 <h1>SV Wealth Terminal</h1>
 </header>
 
+<!-- SEARCH SECTION -->
 <div class="section">
 
 <h2>🔍 Search / Add Stock or Index</h2>
+
 <input type="text" id="symbolInput" placeholder="Example: NSE:RELIANCE or NASDAQ:AAPL">
-<button onclick="loadChart()">Load</button>
+<button onclick="loadChart()">Load Chart</button>
 
 <div id="chart"></div>
 
 </div>
 
-<!-- GLOBAL + COMMODITIES + INDIA + CRYPTO OVERVIEW -->
+<!-- MARKET OVERVIEW SECTION -->
 
 <div class="section">
 <h2>🌎 Global | Commodities | India | Crypto</h2>
 
 <div class="tradingview-widget-container">
 <div class="tradingview-widget-container__widget"></div>
+
 <script type="text/javascript" 
 src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
 {
@@ -98,43 +105,45 @@ src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.
 "showChart": false,
 "locale": "en",
 "width": "100%",
-"height": "400",
+"height": "500",
 "tabs": [
 {
 "title": "Global",
 "symbols": [
-{"s": "FOREXCOM:SPXUSD"},
-{"s": "FOREXCOM:NSXUSD"},
-{"s": "FOREXCOM:DJI"}
+{"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
+{"s": "FOREXCOM:NSXUSD", "d": "NASDAQ"},
+{"s": "FOREXCOM:DJI", "d": "Dow Jones"}
 ]
 },
 {
 "title": "Commodities",
 "symbols": [
-{"s": "COMEX:GC1!"},
-{"s": "NYMEX:CL1!"}
+{"s": "TVC:GOLD", "d": "Gold"},
+{"s": "TVC:SILVER", "d": "Silver"},
+{"s": "TVC:USOIL", "d": "Crude Oil"}
 ]
 },
 {
 "title": "India",
 "symbols": [
-{"s": "NSE:NIFTY"},
-{"s": "BSE:SENSEX"},
-{"s": "NSE:RELIANCE"}
+{"s": "NSE:NIFTY", "d": "Nifty 50"},
+{"s": "NSE:BANKNIFTY", "d": "Bank Nifty"},
+{"s": "NSE:RELIANCE", "d": "Reliance"},
+{"s": "NSE:TCS", "d": "TCS"}
 ]
 },
 {
 "title": "Crypto",
 "symbols": [
-{"s": "BINANCE:BTCUSDT"},
-{"s": "BINANCE:ETHUSDT"}
+{"s": "BINANCE:BTCUSDT", "d": "Bitcoin"},
+{"s": "BINANCE:ETHUSDT", "d": "Ethereum"}
 ]
 }
 ]
 }
 </script>
-</div>
 
+</div>
 </div>
 
 <!-- LIVE NEWS TICKER -->
@@ -142,16 +151,18 @@ src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.
 <div class="ticker">
 <div class="tradingview-widget-container">
 <div class="tradingview-widget-container__widget"></div>
+
 <script type="text/javascript" 
 src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
 {
 "symbols": [
 {"proName":"NSE:NIFTY","title":"NIFTY"},
-{"proName":"BSE:SENSEX","title":"SENSEX"},
+{"proName":"NSE:BANKNIFTY","title":"BANK NIFTY"},
 {"proName":"NSE:RELIANCE","title":"RELIANCE"},
-{"proName":"COMEX:GC1!","title":"GOLD"},
-{"proName":"NYMEX:CL1!","title":"CRUDE"},
-{"proName":"BINANCE:BTCUSDT","title":"BTC"}
+{"proName":"TVC:GOLD","title":"GOLD"},
+{"proName":"TVC:USOIL","title":"CRUDE"},
+{"proName":"BINANCE:BTCUSDT","title":"BTC"},
+{"proName":"FOREXCOM:SPXUSD","title":"S&P 500"}
 ],
 "colorTheme":"dark",
 "isTransparent":false,
@@ -159,6 +170,7 @@ src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" 
 "locale":"en"
 }
 </script>
+
 </div>
 </div>
 
