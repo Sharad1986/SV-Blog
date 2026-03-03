@@ -1,180 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
+<title>SV Wealth Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SV WEALTH - Personal Market Tracker</title>
 
 <style>
-    body {
-        margin: 0;
-        font-family: Georgia, serif;
-        background-color: #0c1c2c;
-        color: #d4af37;
-        text-align: center;
-    }
-    header {
-        padding: 30px 20px;
-    }
-    header img {
-        width: 160px;
-    }
-    h1 {
-        letter-spacing: 10px;
-        font-weight: 400;
-        margin-top: 10px;
-    }
-    .search-container {
-        margin: 30px auto;
-    }
-    input, button {
-        padding: 10px;
-        margin: 5px;
-        font-size: 16px;
-    }
-    input {
-        width: 200px;
-        border: 1px solid #d4af37;
-        background: transparent;
-        color: #d4af37;
-        outline: none;
-    }
-    button {
-        background: #d4af37;
-        color: #0c1c2c;
-        border: none;
-        cursor: pointer;
-    }
-    table {
-        margin: auto;
-        width: 95%;
-        max-width: 700px;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-    th, td {
-        padding: 12px;
-        border-bottom: 1px solid rgba(212,175,55,0.3);
-    }
-    th {
-        background: rgba(212,175,55,0.15);
-    }
-    .remove-btn {
-        background: none;
-        border: none;
-        color: #ff6666;
-        cursor: pointer;
-        font-size: 18px;
-    }
+body {
+    margin:0;
+    font-family: Arial;
+    background:#0b0c10;
+    color:white;
+}
+
+header {
+    text-align:center;
+    padding:20px;
+    background:#111;
+}
+
+header img {
+    width:160px;
+}
+
+h2 {
+    margin-top:40px;
+    border-bottom:1px solid #333;
+    padding-bottom:10px;
+}
+
+.container {
+    padding:20px;
+}
+
+.market-box {
+    background:#1a1a1a;
+    padding:10px;
+    margin:10px 0;
+    border-radius:8px;
+    display:flex;
+    justify-content:space-between;
+}
+
+button {
+    padding:5px 10px;
+    background:#00b894;
+    border:none;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+input {
+    padding:5px;
+    margin-right:5px;
+}
+
+.ticker {
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:black;
+    color:#00ffcc;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.ticker span {
+    display:inline-block;
+    padding-left:100%;
+    animation:scroll 20s linear infinite;
+}
+
+@keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+}
 </style>
 </head>
+
 <body>
 
 <header>
-    <img src="logo.png" alt="SV WEALTH Logo">
-    <h1>SV WEALTH</h1>
+    <img src="logo.png">
+    <h1>SV Wealth Dashboard</h1>
 </header>
 
-<div class="search-container">
-    <input type="text" id="stockInput" placeholder="Enter Symbol (e.g. TCS, NIFTY50)">
-    <button onclick="addSymbol()">Add</button>
+<div class="container">
+
+<!-- GLOBAL -->
+<h2>🌍 Global Markets</h2>
+<div id="global"></div>
+<input id="globalInput" placeholder="Add Index (ex: ^GSPC)">
+<button onclick="addMarket('global')">Add</button>
+
+<!-- COMMODITIES -->
+<h2>🛢 Commodities</h2>
+<div id="commodities"></div>
+<input id="commoditiesInput" placeholder="Add Commodity (ex: GC=F)">
+<button onclick="addMarket('commodities')">Add</button>
+
+<!-- INDIAN MARKET -->
+<h2>🇮🇳 Indian Stock Market</h2>
+<div id="india"></div>
+<input id="indiaInput" placeholder="Add Stock (ex: RELIANCE.NS)">
+<button onclick="addMarket('india')">Add</button>
+
 </div>
 
-<table id="watchlist">
-    <thead>
-        <tr>
-            <th>Symbol</th>
-            <th>Price</th>
-            <th>Qty</th>
-            <th>Buy Price</th>
-            <th>P/L (%)</th>
-            <th>P/L ₹</th>
-            <th>Remove</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+<div class="ticker">
+<span id="tickerText">
+NIFTY 50 ▲  | SENSEX ▲  | GOLD ▲  | CRUDE ▼  | BTC ▲
+</span>
+</div>
 
 <script>
-const watchlistBody = document.querySelector("#watchlist tbody");
 
-// Load saved data
-let portfolio = JSON.parse(localStorage.getItem("portfolio")) || [];
+let markets = {
+    global: ["^GSPC", "^DJI"],
+    commodities: ["GC=F", "CL=F"],
+    india: ["^NSEI", "RELIANCE.NS"]
+};
 
-// Format symbol for Yahoo
-function formatSymbol(input) {
-    const sym = input.trim().toUpperCase();
-    if (sym === "NIFTY50") return "^NSEI";
-    if (sym === "SENSEX") return "^BSESN";
-    if (sym === "BANKNIFTY") return "^NSEBANK";
-    if (sym.endsWith(".NS") || sym.endsWith(".BO") || sym.startsWith("^")) return sym;
-    return sym + ".NS";
-}
+function renderMarkets() {
+    for (let category in markets) {
+        let div = document.getElementById(category);
+        div.innerHTML = "";
 
-function savePortfolio() {
-    localStorage.setItem("portfolio", JSON.stringify(portfolio));
-}
-
-async function fetchPrice(symbol) {
-    try {
-        const yahooUrl = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + encodeURIComponent(symbol);
-        const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(yahooUrl);
-        const res = await fetch(proxyUrl);
-        const data = await res.json();
-        return data.quoteResponse.result[0].regularMarketPrice || 0;
-    } catch {
-        return 0;
+        markets[category].forEach((symbol, index) => {
+            div.innerHTML += `
+            <div class="market-box">
+                ${symbol}
+                <button onclick="deleteMarket('${category}', ${index})">Delete</button>
+            </div>
+            `;
+        });
     }
 }
 
-async function updateAll() {
-    watchlistBody.innerHTML = "";
-    for (let item of portfolio) {
-        const price = await fetchPrice(item.symbol);
-        const pl = (price - item.buyPrice) * item.qty;
-        const plPct = ((price - item.buyPrice) / item.buyPrice) * 100;
-
-        watchlistBody.innerHTML += `
-            <tr>
-                <td>${item.symbol}</td>
-                <td>${price.toFixed(2)}</td>
-                <td>${item.qty}</td>
-                <td>${item.buyPrice.toFixed(2)}</td>
-                <td>${plPct.toFixed(2)}</td>
-                <td>${pl.toFixed(2)}</td>
-                <td><button class="remove-btn" onclick="removeSymbol('${item.symbol}')">×</button></td>
-            </tr>
-        `;
+function addMarket(category) {
+    let input = document.getElementById(category + "Input");
+    let value = input.value.trim();
+    if (value !== "") {
+        markets[category].push(value);
+        input.value = "";
+        renderMarkets();
     }
 }
 
-function addSymbol() {
-    const input = document.getElementById("stockInput");
-    const raw = input.value.trim();
-    if (!raw) return;
-
-    const sym = formatSymbol(raw);
-
-    const qty = parseFloat(prompt("Enter Quantity for " + sym + ":"));
-    const bp = parseFloat(prompt("Enter Buy Price for " + sym + ":"));
-
-    if (!isNaN(qty) && !isNaN(bp)) {
-        portfolio.push({ symbol: sym, qty: qty, buyPrice: bp });
-        savePortfolio();
-        updateAll();
-    }
-    input.value = "";
+function deleteMarket(category, index) {
+    markets[category].splice(index, 1);
+    renderMarkets();
 }
 
-function removeSymbol(symbol) {
-    portfolio = portfolio.filter(item => item.symbol !== symbol);
-    savePortfolio();
-    updateAll();
-}
+renderMarkets();
 
-// Update prices every 60 seconds
-updateAll();
-setInterval(updateAll, 60000);
 </script>
 
 </body>
