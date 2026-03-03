@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>SV Wealth Dashboard</title>
+<title>SV Wealth Terminal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -12,18 +12,18 @@ body {
     color:white;
 }
 
-.main-header {
+header {
     background:black;
-    padding:30px;
+    padding:25px;
     text-align:center;
     border-bottom:2px solid gold;
 }
 
-.logo-container img {
-    width:120px;
+header img {
+    width:110px;
 }
 
-.logo-container h1 {
+header h1 {
     color:gold;
     margin:10px 0 0;
     letter-spacing:2px;
@@ -35,112 +35,157 @@ body {
 
 h2 {
     color:gold;
-    margin-bottom:20px;
     border-bottom:1px solid #333;
     padding-bottom:10px;
+}
+
+input {
+    padding:8px;
+    width:250px;
+}
+
+button {
+    padding:8px 12px;
+    background:gold;
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+#chart {
+    height:500px;
+    margin-top:20px;
+}
+
+.ticker {
+    position:fixed;
+    bottom:0;
+    width:100%;
+    border-top:2px solid gold;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<header class="main-header">
-    <div class="logo-container">
-        <img src="logo.png" alt="SV Wealth Logo">
-        <h1>SV Wealth</h1>
-    </div>
+<header>
+<img src="logo.png">
+<h1>SV Wealth Terminal</h1>
 </header>
 
-<!-- GLOBAL MARKETS -->
 <div class="section">
-<h2>🌍 Global Markets</h2>
 
-<!-- TradingView Widget BEGIN -->
-<div class="tradingview-widget-container">
-  <div id="global_widget"></div>
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-  {
-  "colorTheme": "dark",
-  "dateRange": "1D",
-  "showChart": true,
-  "locale": "en",
-  "width": "100%",
-  "height": "500",
-  "tabs": [
-    {
-      "title": "Global",
-      "symbols": [
-        {"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
-        {"s": "FOREXCOM:NSXUSD", "d": "NASDAQ"},
-        {"s": "FOREXCOM:DJI", "d": "Dow Jones"},
-        {"s": "FOREXCOM:UKXGBP", "d": "FTSE 100"}
-      ]
-    }
-  ]
-}
-  </script>
-</div>
+<h2>🔍 Search / Add Stock or Index</h2>
+<input type="text" id="symbolInput" placeholder="Example: NSE:RELIANCE or NASDAQ:AAPL">
+<button onclick="loadChart()">Load</button>
+
+<div id="chart"></div>
+
 </div>
 
-<!-- COMMODITIES -->
+<!-- GLOBAL + COMMODITIES + INDIA + CRYPTO OVERVIEW -->
+
 <div class="section">
-<h2>🛢 Commodities</h2>
+<h2>🌎 Global | Commodities | India | Crypto</h2>
 
 <div class="tradingview-widget-container">
-  <div id="commodity_widget"></div>
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-  {
-  "colorTheme": "dark",
-  "dateRange": "1D",
-  "showChart": true,
-  "locale": "en",
-  "width": "100%",
-  "height": "500",
-  "tabs": [
-    {
-      "title": "Commodities",
-      "symbols": [
-        {"s": "COMEX:GC1!", "d": "Gold"},
-        {"s": "NYMEX:CL1!", "d": "Crude Oil"},
-        {"s": "CBOT:SI1!", "d": "Silver"}
-      ]
-    }
-  ]
+<div class="tradingview-widget-container__widget"></div>
+<script type="text/javascript" 
+src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+{
+"colorTheme": "dark",
+"dateRange": "1D",
+"showChart": false,
+"locale": "en",
+"width": "100%",
+"height": "400",
+"tabs": [
+{
+"title": "Global",
+"symbols": [
+{"s": "FOREXCOM:SPXUSD"},
+{"s": "FOREXCOM:NSXUSD"},
+{"s": "FOREXCOM:DJI"}
+]
+},
+{
+"title": "Commodities",
+"symbols": [
+{"s": "COMEX:GC1!"},
+{"s": "NYMEX:CL1!"}
+]
+},
+{
+"title": "India",
+"symbols": [
+{"s": "NSE:NIFTY"},
+{"s": "BSE:SENSEX"},
+{"s": "NSE:RELIANCE"}
+]
+},
+{
+"title": "Crypto",
+"symbols": [
+{"s": "BINANCE:BTCUSDT"},
+{"s": "BINANCE:ETHUSDT"}
+]
 }
-  </script>
-</div>
+]
+}
+</script>
 </div>
 
-<!-- INDIAN MARKET -->
-<div class="section">
-<h2>🇮🇳 Indian Market</h2>
+</div>
 
+<!-- LIVE NEWS TICKER -->
+
+<div class="ticker">
 <div class="tradingview-widget-container">
-  <div id="india_widget"></div>
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-  {
-  "colorTheme": "dark",
-  "dateRange": "1D",
-  "showChart": true,
-  "locale": "en",
-  "width": "100%",
-  "height": "500",
-  "tabs": [
-    {
-      "title": "India",
-      "symbols": [
-        {"s": "NSE:NIFTY", "d": "Nifty 50"},
-        {"s": "BSE:SENSEX", "d": "Sensex"},
-        {"s": "NSE:RELIANCE", "d": "Reliance"},
-        {"s": "NSE:TCS", "d": "TCS"}
-      ]
-    }
-  ]
+<div class="tradingview-widget-container__widget"></div>
+<script type="text/javascript" 
+src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+{
+"symbols": [
+{"proName":"NSE:NIFTY","title":"NIFTY"},
+{"proName":"BSE:SENSEX","title":"SENSEX"},
+{"proName":"NSE:RELIANCE","title":"RELIANCE"},
+{"proName":"COMEX:GC1!","title":"GOLD"},
+{"proName":"NYMEX:CL1!","title":"CRUDE"},
+{"proName":"BINANCE:BTCUSDT","title":"BTC"}
+],
+"colorTheme":"dark",
+"isTransparent":false,
+"displayMode":"adaptive",
+"locale":"en"
 }
-  </script>
+</script>
 </div>
 </div>
+
+<!-- TRADINGVIEW ADVANCED CHART -->
+
+<script src="https://s3.tradingview.com/tv.js"></script>
+
+<script>
+function loadChart() {
+    var symbol = document.getElementById("symbolInput").value;
+    if(symbol === "") return;
+
+    document.getElementById("chart").innerHTML = "";
+
+    new TradingView.widget({
+        "width": "100%",
+        "height": 500,
+        "symbol": symbol,
+        "interval": "D",
+        "timezone": "Asia/Kolkata",
+        "theme": "dark",
+        "style": "1",
+        "locale": "en",
+        "container_id": "chart"
+    });
+}
+</script>
 
 </body>
 </html>
