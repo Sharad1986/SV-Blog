@@ -1,142 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance Market Dashboard</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #0a0a0a; color: #fff; }
-        .dashboard { max-width: 1200px; margin: auto; }
-        header { background: linear-gradient(90deg, #1e3c72, #2a5298); padding: 20px; text-align: center; border-radius: 10px; }
-        main { display: flex; gap: 20px; margin-top: 20px; }
-        .watchlist, .stock-details { background: #1a1a1a; padding: 20px; border-radius: 10px; flex: 1; }
-        .search-section { margin-top: 20px; background: #1a1a1a; padding: 20px; border-radius: 10px; }
-        h1, h2 { color: #00ff88; }
-        #search { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #444; border-radius: 5px; background: #2a2a2a; color: #fff; box-sizing: border-box; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
-        th { background: #333; }
-        tr:hover { background: #2a2a2a; }
-        .positive { color: #00ff88; }
-        .negative { color: #ff4444; }
-        button { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; margin: 0 2px; }
-        .add-btn { background: #00ff88; color: #000; }
-        .remove-btn { background: #ff4444; color: #fff; }
-        #watchlist li { padding: 10px; border-bottom: 1px solid #333; cursor: pointer; list-style: none; }
-        @media (max-width: 768px) { main { flex-direction: column; } }
-    </style>
+<title>SV Wealth Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#0b0c10;
+    color:white;
+}
+
+.main-header {
+    background:black;
+    padding:30px;
+    text-align:center;
+    border-bottom:2px solid gold;
+}
+
+.logo-container img {
+    width:120px;
+}
+
+.logo-container h1 {
+    color:gold;
+    margin:10px 0 0;
+    letter-spacing:2px;
+}
+
+.section {
+    padding:30px 20px;
+}
+
+h2 {
+    color:gold;
+    margin-bottom:20px;
+    border-bottom:1px solid #333;
+    padding-bottom:10px;
+}
+</style>
 </head>
+
 <body>
-    <div class="dashboard">
-        <header>
-            <h1>Finance Market Dashboard</h1>
-            <p>Track NSE stocks | Live mock updates</p>
-        </header>
-        <main>
-            <div class="watchlist">
-                <h2>Watchlist</h2>
-                <ul id="watchlist"></ul>
-            </div>
-            <div class="stock-details">
-                <h2>Stock Details</h2>
-                <div id="stock-info">Click stock or watchlist item.</div>
-            </div>
-        </main>
-        <section class="search-section">
-            <input type="text" id="search" placeholder="Search (RELIANCE, TCS, AAPL...)">
-            <table>
-                <thead>
-                    <tr><th>Stock</th><th>Price</th><th>Change %</th><th>Actions</th></tr>
-                </thead>
-                <tbody id="stock-tbody"></tbody>
-            </table>
-        </section>
+
+<!-- HEADER -->
+<header class="main-header">
+    <div class="logo-container">
+        <img src="logo.png" alt="SV Wealth Logo">
+        <h1>SV Wealth</h1>
     </div>
-    <script>
-        const stocks = [
-            {symbol: 'RELIANCE', name: 'Reliance', price: 2850.50, change: 1.2},
-            {symbol: 'TCS', name: 'TCS', price: 4150.00, change: -0.5},
-            {symbol: 'INFY', name: 'Infosys', price: 1850.75, change: 2.1},
-            {symbol: 'AAPL', name: 'Apple', price: 225.30, change: 0.8},
-            {symbol: 'TSLA', name: 'Tesla', price: 248.45, change: -1.3}
-        ];
-        let watchlist = [];
-        const stockTbody = document.getElementById('stock-tbody');
-        const watchlistEl = document.getElementById('watchlist');
-        const searchInput = document.getElementById('search');
-        const stockInfo = document.getElementById('stock-info');
+</header>
 
-        function renderStocks(filtered = stocks) {
-            stockTbody.innerHTML = '';
-            filtered.forEach(stock => {
-                const row = document.createElement('tr');
-                const changeCls = stock.change >= 0 ? 'positive' : 'negative';
-                row.innerHTML = `
-                    <td>${stock.symbol} - ${stock.name}</td>
-                    <td>${stock.price.toLocaleString()}</td>
-                    <td class="${changeCls}">${stock.change.toFixed(1)}%</td>
-                    <td>
-                        <button class="add-btn" onclick="addToWatchlist('${stock.symbol}')">Add</button>
-                        <button class="remove-btn" onclick="removeFromWatchlist('${stock.symbol}')">Remove</button>
-                    </td>
-                `;
-                stockTbody.appendChild(row);
-            });
-        }
+<!-- GLOBAL MARKETS -->
+<div class="section">
+<h2>🌍 Global Markets</h2>
 
-        function addToWatchlist(symbol) {
-            const stock = stocks.find(s => s.symbol === symbol);
-            if (!watchlist.some(s => s.symbol === symbol)) {
-                watchlist.push({...stock});
-                renderWatchlist();
-            }
-        }
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+  <div id="global_widget"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+  {
+  "colorTheme": "dark",
+  "dateRange": "1D",
+  "showChart": true,
+  "locale": "en",
+  "width": "100%",
+  "height": "500",
+  "tabs": [
+    {
+      "title": "Global",
+      "symbols": [
+        {"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
+        {"s": "FOREXCOM:NSXUSD", "d": "NASDAQ"},
+        {"s": "FOREXCOM:DJI", "d": "Dow Jones"},
+        {"s": "FOREXCOM:UKXGBP", "d": "FTSE 100"}
+      ]
+    }
+  ]
+}
+  </script>
+</div>
+</div>
 
-        function removeFromWatchlist(symbol) {
-            watchlist = watchlist.filter(s => s.symbol !== symbol);
-            renderWatchlist();
-        }
+<!-- COMMODITIES -->
+<div class="section">
+<h2>🛢 Commodities</h2>
 
-        function renderWatchlist() {
-            watchlistEl.innerHTML = '';
-            watchlist.forEach(stock => {
-                const li = document.createElement('li');
-                const changeCls = stock.change >= 0 ? 'positive' : 'negative';
-                li.innerHTML = `
-                    ${stock.symbol}: ${stock.price.toLocaleString()} 
-                    <span class="${changeCls}">(${stock.change.toFixed(1)}%)</span>
-                    <button class="remove-btn" onclick="removeFromWatchlist('${stock.symbol}')">×</button>
-                `;
-                li.onclick = (e) => { if (e.target.tagName !== 'BUTTON') showStockDetails(stock); };
-                watchlistEl.appendChild(li);
-            });
-        }
+<div class="tradingview-widget-container">
+  <div id="commodity_widget"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+  {
+  "colorTheme": "dark",
+  "dateRange": "1D",
+  "showChart": true,
+  "locale": "en",
+  "width": "100%",
+  "height": "500",
+  "tabs": [
+    {
+      "title": "Commodities",
+      "symbols": [
+        {"s": "COMEX:GC1!", "d": "Gold"},
+        {"s": "NYMEX:CL1!", "d": "Crude Oil"},
+        {"s": "CBOT:SI1!", "d": "Silver"}
+      ]
+    }
+  ]
+}
+  </script>
+</div>
+</div>
 
-        function showStockDetails(stock) {
-            const changeCls = stock.change >= 0 ? 'positive' : 'negative';
-            stockInfo.innerHTML = `
-                <strong>${stock.name} (${stock.symbol})</strong><br>
-                Price: ${stock.price.toLocaleString()}<br>
-                Change: <span class="${changeCls}">${stock.change.toFixed(1)}%</span>
-            `;
-        }
+<!-- INDIAN MARKET -->
+<div class="section">
+<h2>🇮🇳 Indian Market</h2>
 
-        searchInput.oninput = (e) => {
-            const q = e.target.value.toLowerCase();
-            const filtered = stocks.filter(s => s.symbol.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
-            renderStocks(filtered);
-        };
+<div class="tradingview-widget-container">
+  <div id="india_widget"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+  {
+  "colorTheme": "dark",
+  "dateRange": "1D",
+  "showChart": true,
+  "locale": "en",
+  "width": "100%",
+  "height": "500",
+  "tabs": [
+    {
+      "title": "India",
+      "symbols": [
+        {"s": "NSE:NIFTY", "d": "Nifty 50"},
+        {"s": "BSE:SENSEX", "d": "Sensex"},
+        {"s": "NSE:RELIANCE", "d": "Reliance"},
+        {"s": "NSE:TCS", "d": "TCS"}
+      ]
+    }
+  ]
+}
+  </script>
+</div>
+</div>
 
-        setInterval(() => {
-            stocks.forEach(s => {
-                s.change += (Math.random() - 0.5) * 2;
-                s.price *= (1 + s.change / 100);
-            });
-            renderStocks();
-            renderWatchlist();
-        }, 5000);  // Faster updates for demo
-
-        renderStocks();
-    </script>
 </body>
 </html>
