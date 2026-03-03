@@ -12,15 +12,16 @@ body {
     color:white;
 }
 
+/* HEADER */
 header {
     background:black;
-    padding:25px;
+    padding:20px;
     text-align:center;
     border-bottom:2px solid gold;
 }
 
 header img {
-    width:110px;
+    width:100px;
 }
 
 header h1 {
@@ -29,6 +30,35 @@ header h1 {
     letter-spacing:2px;
 }
 
+/* SEARCH SECTION */
+.search-section {
+    padding:25px;
+    text-align:center;
+    background:#111;
+}
+
+.search-section input {
+    padding:10px;
+    width:300px;
+    border:none;
+    border-radius:5px;
+}
+
+.search-section button {
+    padding:10px 15px;
+    background:gold;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+#chart {
+    height:500px;
+    margin-top:20px;
+}
+
+/* MARKET SECTION */
 .section {
     padding:30px 20px;
 }
@@ -39,27 +69,7 @@ h2 {
     padding-bottom:10px;
 }
 
-input {
-    padding:8px;
-    width:280px;
-    border:none;
-    border-radius:4px;
-}
-
-button {
-    padding:8px 12px;
-    background:gold;
-    border:none;
-    cursor:pointer;
-    font-weight:bold;
-    border-radius:4px;
-}
-
-#chart {
-    height:500px;
-    margin-top:20px;
-}
-
+/* TICKER */
 .ticker {
     position:fixed;
     bottom:0;
@@ -72,60 +82,27 @@ button {
 
 <body>
 
+<!-- HEADER -->
 <header>
 <img src="logo.png" alt="SV Wealth Logo">
 <h1>SV Wealth Terminal</h1>
 </header>
 
-<!-- SEARCH SECTION -->
-<div class="section">
+<!-- SEARCH BAR -->
+<div class="search-section">
 
-<!-- TRADINGVIEW LIBRARY -->
-<script src="https://s3.tradingview.com/tv.js"></script>
+<h2>🔍 Search Stock / Index / ETF / Crypto</h2>
 
-<script>
+<input type="text" id="symbolInput" placeholder="Example: NSE:RELIANCE or AMEX:PALL">
+<button onclick="loadChart()">Load Chart</button>
 
-let tvWidget = null;
+<div id="chart"></div>
 
-function loadChart() {
-
-    var symbol = document.getElementById("symbolInput").value.trim();
-
-    if(symbol === "") {
-        alert("Please enter symbol like NSE:RELIANCE");
-        return;
-    }
-
-    // Clear old chart
-    document.getElementById("chart").innerHTML = "";
-
-    // Small delay ensures container reset
-    setTimeout(function() {
-
-        tvWidget = new TradingView.widget({
-            "width": "100%",
-            "height": 500,
-            "symbol": symbol,
-            "interval": "D",
-            "timezone": "Asia/Kolkata",
-            "theme": "dark",
-            "style": "1",
-            "locale": "en",
-            "enable_publishing": false,
-            "hide_top_toolbar": false,
-            "hide_legend": false,
-            "container_id": "chart"
-        });
-
-    }, 100);
-}
-
-</script>
 </div>
 
-<!-- MARKET OVERVIEW SECTION -->
-
+<!-- MARKET OVERVIEW -->
 <div class="section">
+
 <h2>🌎 Global | Commodities | India | Crypto | ETFs</h2>
 
 <div class="tradingview-widget-container">
@@ -141,51 +118,44 @@ src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.
 "width": "100%",
 "height": "550",
 "tabs": [
-
 {
 "title": "Global",
 "symbols": [
-{"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
-{"s": "FOREXCOM:NSXUSD", "d": "NASDAQ"},
-{"s": "FOREXCOM:DJI", "d": "Dow Jones"}
+{"s": "FOREXCOM:SPXUSD"},
+{"s": "FOREXCOM:NSXUSD"},
+{"s": "FOREXCOM:DJI"}
 ]
 },
-
 {
 "title": "Commodities",
 "symbols": [
-{"s": "TVC:GOLD", "d": "Gold"},
-{"s": "TVC:SILVER", "d": "Silver"},
-{"s": "TVC:USOIL", "d": "Crude Oil"}
+{"s": "TVC:GOLD"},
+{"s": "TVC:SILVER"},
+{"s": "TVC:USOIL"}
 ]
 },
-
 {
 "title": "India",
 "symbols": [
-{"s": "NSE:NIFTY", "d": "Nifty 50"},
-{"s": "NSE:BANKNIFTY", "d": "Bank Nifty"},
-{"s": "NSE:RELIANCE", "d": "Reliance"},
-{"s": "NSE:TCS", "d": "TCS"}
+{"s": "NSE:NIFTY"},
+{"s": "NSE:BANKNIFTY"},
+{"s": "NSE:RELIANCE"}
 ]
 },
-
 {
 "title": "Crypto",
 "symbols": [
-{"s": "BINANCE:BTCUSDT", "d": "Bitcoin"},
-{"s": "BINANCE:ETHUSDT", "d": "Ethereum"}
+{"s": "BINANCE:BTCUSDT"},
+{"s": "BINANCE:ETHUSDT"}
 ]
 },
-
 {
 "title": "Global ETFs",
 "symbols": [
-{"s": "AMEX:PALL", "d": "PALL - Palladium ETF"},
-{"s": "AMEX:URA", "d": "URA - Uranium ETF"}
+{"s": "AMEX:PALL"},
+{"s": "AMEX:URA"}
 ]
 }
-
 ]
 }
 </script>
@@ -193,8 +163,7 @@ src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.
 </div>
 </div>
 
-<!-- LIVE NEWS TICKER -->
-
+<!-- TICKER -->
 <div class="ticker">
 <div class="tradingview-widget-container">
 <div class="tradingview-widget-container__widget"></div>
@@ -204,12 +173,10 @@ src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" 
 {
 "symbols": [
 {"proName":"NSE:NIFTY","title":"NIFTY"},
-{"proName":"NSE:BANKNIFTY","title":"BANK NIFTY"},
-{"proName":"NSE:RELIANCE","title":"RELIANCE"},
+{"proName":"AMEX:PALL","title":"PALL"},
+{"proName":"AMEX:URA","title":"URA"},
 {"proName":"TVC:GOLD","title":"GOLD"},
-{"proName":"TVC:USOIL","title":"CRUDE"},
-{"proName":"BINANCE:BTCUSDT","title":"BTC"},
-{"proName":"FOREXCOM:SPXUSD","title":"S&P 500"}
+{"proName":"BINANCE:BTCUSDT","title":"BTC"}
 ],
 "colorTheme":"dark",
 "isTransparent":false,
@@ -221,14 +188,18 @@ src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" 
 </div>
 </div>
 
-<!-- TRADINGVIEW ADVANCED CHART -->
-
+<!-- ADVANCED CHART SCRIPT -->
 <script src="https://s3.tradingview.com/tv.js"></script>
 
 <script>
 function loadChart() {
-    var symbol = document.getElementById("symbolInput").value;
-    if(symbol === "") return;
+
+    var symbol = document.getElementById("symbolInput").value.trim();
+
+    if(symbol === "") {
+        alert("Please enter valid symbol");
+        return;
+    }
 
     document.getElementById("chart").innerHTML = "";
 
