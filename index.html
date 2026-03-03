@@ -13,18 +13,18 @@ body {
 }
 
 .main-header {
-    background: black;
-    padding: 30px;
-    text-align: center;
-    border-bottom: 2px solid gold;
+    background:black;
+    padding:25px;
+    text-align:center;
+    border-bottom:2px solid gold;
 }
 
 .logo-container img {
-    width: 120px;
+    width:120px;
 }
 
 .logo-container h1 {
-    color: gold;
+    color:gold;
     margin:10px 0 0;
 }
 
@@ -33,7 +33,7 @@ body {
 }
 
 h2 {
-    color: gold;
+    color:gold;
     border-bottom:1px solid #333;
     padding-bottom:10px;
 }
@@ -50,17 +50,6 @@ h2 {
 .green { color:#00ff99; }
 .red { color:#ff4d4d; }
 
-button {
-    background:gold;
-    border:none;
-    padding:5px 10px;
-    cursor:pointer;
-}
-
-input {
-    padding:5px;
-}
-
 </style>
 </head>
 
@@ -76,13 +65,13 @@ input {
 <div class="container">
 
 <h2>🌍 Global Markets</h2>
-<div id="global"></div>
+<div id="global">Loading...</div>
 
 <h2>🛢 Commodities</h2>
-<div id="commodities"></div>
+<div id="commodities">Loading...</div>
 
 <h2>🇮🇳 Indian Stock Market</h2>
-<div id="india"></div>
+<div id="india">Loading...</div>
 
 </div>
 
@@ -96,25 +85,29 @@ let markets = {
 
 async function fetchPrice(symbol) {
     try {
-        let url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbol}`;
-        let response = await fetch(url);
+        let proxy = "https://api.allorigins.win/get?url=";
+        let url = encodeURIComponent(`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbol}`);
+        
+        let response = await fetch(proxy + url);
         let data = await response.json();
-        let quote = data.quoteResponse.result[0];
+        let parsed = JSON.parse(data.contents);
+
+        let quote = parsed.quoteResponse.result[0];
 
         return {
             price: quote.regularMarketPrice,
             change: quote.regularMarketChangePercent
         };
-    } catch {
+    } catch (error) {
+        console.log("Error:", error);
         return null;
     }
 }
 
 async function renderMarkets() {
+
     for (let category in markets) {
         let div = document.getElementById(category);
-        div.innerHTML = "Loading...";
-
         let html = "";
 
         for (let symbol of markets[category]) {
@@ -132,7 +125,7 @@ async function renderMarkets() {
             }
         }
 
-        div.innerHTML = html;
+        div.innerHTML = html || "Data unavailable";
     }
 }
 
