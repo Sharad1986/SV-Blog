@@ -7,152 +7,137 @@
 <style>
 body {
     margin:0;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     background:#0b0c10;
     color:white;
 }
 
-header {
-    text-align:center;
-    padding:20px;
-    background:#111;
+.main-header {
+    background: black;
+    padding: 30px;
+    text-align: center;
+    border-bottom: 2px solid gold;
 }
 
-header img {
-    width:160px;
+.logo-container img {
+    width: 120px;
 }
 
-h2 {
-    margin-top:40px;
-    border-bottom:1px solid #333;
-    padding-bottom:10px;
+.logo-container h1 {
+    color: gold;
+    margin:10px 0 0;
 }
 
 .container {
     padding:20px;
 }
 
+h2 {
+    color: gold;
+    border-bottom:1px solid #333;
+    padding-bottom:10px;
+}
+
 .market-box {
     background:#1a1a1a;
-    padding:10px;
+    padding:12px;
     margin:10px 0;
     border-radius:8px;
     display:flex;
     justify-content:space-between;
 }
 
+.green { color:#00ff99; }
+.red { color:#ff4d4d; }
+
 button {
-    padding:5px 10px;
-    background:#00b894;
+    background:gold;
     border:none;
-    color:white;
-    border-radius:5px;
+    padding:5px 10px;
     cursor:pointer;
 }
 
 input {
     padding:5px;
-    margin-right:5px;
 }
 
-.ticker {
-    position:fixed;
-    bottom:0;
-    width:100%;
-    background:black;
-    color:#00ffcc;
-    overflow:hidden;
-    white-space:nowrap;
-}
-
-.ticker span {
-    display:inline-block;
-    padding-left:100%;
-    animation:scroll 20s linear infinite;
-}
-
-@keyframes scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-100%); }
-}
 </style>
 </head>
 
 <body>
 
-<header>
-    <img src="logo.png">
-    <h1>SV Wealth Dashboard</h1>
+<header class="main-header">
+    <div class="logo-container">
+        <img src="logo.png">
+        <h1>SV Wealth</h1>
+    </div>
 </header>
 
 <div class="container">
 
-<!-- GLOBAL -->
 <h2>🌍 Global Markets</h2>
 <div id="global"></div>
-<input id="globalInput" placeholder="Add Index (ex: ^GSPC)">
-<button onclick="addMarket('global')">Add</button>
 
-<!-- COMMODITIES -->
 <h2>🛢 Commodities</h2>
 <div id="commodities"></div>
-<input id="commoditiesInput" placeholder="Add Commodity (ex: GC=F)">
-<button onclick="addMarket('commodities')">Add</button>
 
-<!-- INDIAN MARKET -->
 <h2>🇮🇳 Indian Stock Market</h2>
 <div id="india"></div>
-<input id="indiaInput" placeholder="Add Stock (ex: RELIANCE.NS)">
-<button onclick="addMarket('india')">Add</button>
 
-</div>
-
-<div class="ticker">
-<span id="tickerText">
-NIFTY 50 ▲  | SENSEX ▲  | GOLD ▲  | CRUDE ▼  | BTC ▲
-</span>
 </div>
 
 <script>
 
 let markets = {
-    global: ["^GSPC", "^DJI"],
-    commodities: ["GC=F", "CL=F"],
-    india: ["^NSEI", "RELIANCE.NS"]
+    global: ["^GSPC","^DJI","^IXIC"],
+    commodities: ["GC=F","CL=F"],
+    india: ["^NSEI","RELIANCE.NS"]
 };
 
-function renderMarkets() {
+async function fetchPrice(symbol) {
+    try {
+        let url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbol}`;
+        let response = await fetch(url);
+        let data = await response.json();
+        let quote = data.quoteResponse.result[0];
+
+        return {
+            price: quote.regularMarketPrice,
+            change: quote.regularMarketChangePercent
+        };
+    } catch {
+        return null;
+    }
+}
+
+async function renderMarkets() {
     for (let category in markets) {
         let div = document.getElementById(category);
-        div.innerHTML = "";
+        div.innerHTML = "Loading...";
 
-        markets[category].forEach((symbol, index) => {
-            div.innerHTML += `
-            <div class="market-box">
-                ${symbol}
-                <button onclick="deleteMarket('${category}', ${index})">Delete</button>
-            </div>
-            `;
-        });
+        let html = "";
+
+        for (let symbol of markets[category]) {
+            let data = await fetchPrice(symbol);
+
+            if (data) {
+                let color = data.change >= 0 ? "green" : "red";
+                html += `
+                <div class="market-box">
+                    <span>${symbol}</span>
+                    <span class="${color}">
+                        ${data.price} (${data.change.toFixed(2)}%)
+                    </span>
+                </div>`;
+            }
+        }
+
+        div.innerHTML = html;
     }
-}
-
-function addMarket(category) {
-    let input = document.getElementById(category + "Input");
-    let value = input.value.trim();
-    if (value !== "") {
-        markets[category].push(value);
-        input.value = "";
-        renderMarkets();
-    }
-}
-
-function deleteMarket(category, index) {
-    markets[category].splice(index, 1);
-    renderMarkets();
 }
 
 renderMarkets();
+setInterval(renderMarkets, 30000);
 
 </script>
 
